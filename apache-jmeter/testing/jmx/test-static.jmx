@@ -15,7 +15,7 @@
         <collectionProp name="Arguments.arguments">
           <elementProp name="serverName" elementType="Argument">
             <stringProp name="Argument.name">serverName</stringProp>
-            <stringProp name="Argument.value">${__P(serverName, 172.16.0.116)}</stringProp>
+            <stringProp name="Argument.value">${__P(serverName, 10.16.0.2)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
             <stringProp name="Argument.desc">server name or IP</stringProp>
           </elementProp>

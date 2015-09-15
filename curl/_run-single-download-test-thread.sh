@@ -40,7 +40,7 @@ rm -f $LOCAL_FILE_NAME
 
 for i in `seq 1 $LOOP_COUNT`
 do
-    timeVal=`curl http://localhost:${SERVER_PORT}${SERVER_PATH} -o $LOCAL_FILE_NAME -w "%{time_total}\n" -s`
+    timeVal=`curl http://10.16.0.2:${SERVER_PORT}${SERVER_PATH} -o $LOCAL_FILE_NAME -w "%{time_total}\n" -s`
     md5sumVal=`md5sum $LOCAL_FILE_NAME | cut -d" " -f1`
     if [ "$MD5SUM" != "$md5sumVal" ]
     then

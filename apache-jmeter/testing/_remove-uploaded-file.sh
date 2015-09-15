@@ -6,6 +6,6 @@ SCRIPT_DIR="$(cd `dirname $0` && pwd -P)"
 FILE_ID=`cat $SCRIPT_DIR/.uploaded-file-id.txt`
 
 # remove file used for testing
-curl http://172.16.0.116:9080/cloudStorage/v1.0/DICOMEnvelope/delete?id=$FILE_ID
+curl http://10.16.0.2:9080/cloudStorage/v1.0/DICOMEnvelope/delete?id=$FILE_ID
 
 # end of file
