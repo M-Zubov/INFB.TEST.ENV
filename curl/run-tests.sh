@@ -11,14 +11,14 @@ pushd $SCRIPT_DIR
 
 for i in 10 100
 do
-   THREAD_COUNT=$i LOOP_COUNT=30 ./test-001-http-big.sh || exit 1
+   THREAD_COUNT=$i LOOP_COUNT=10 ./test-001-http-big.sh || exit 1
 done
 
 #======================================================================
 
 for i in 10 100
 do
-   THREAD_COUNT=$i LOOP_COUNT=300 ./test-002-client.sh || exit 2
+   THREAD_COUNT=$i LOOP_COUNT=10 ./test-002-client.sh || exit 2
 done
 
 #======================================================================
