@@ -35,6 +35,7 @@ then
 fi
 mkdir -p "$CURR_RESULT_DIR"
 
+timeTestStart=`date +%s`
 for i in $REMOTE_NODES
 do
     NODE_LOG_FILE=${CURR_RESULT_DIR}/${i}-node.log
@@ -48,10 +49,11 @@ do
     ${SCRIPT_DIR}/_run-single-download-test-node.sh > ${NODE_LOG_FILE} &
 done
 wait
+timeTestEnd=`date +%s`
+timeTestDuration=$(( ${timeTestEnd} - ${timeTestStart} ))
 
 CURR_RESULT_DIR=$CURR_RESULT_DIR \
-THREAD_COUNT=$THREAD_COUNT \
-LOOP_COUNT=$LOOP_COUNT \
+TEST_DURATION=$timeTestDuration \
 ${SCRIPT_DIR}/_get-statistics.sh
 
 # end of file

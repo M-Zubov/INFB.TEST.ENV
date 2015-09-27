@@ -3,16 +3,12 @@
 # parse logs from _run-single-download-test*.sh runs
 # and print statistics in the apache jmeter format
 
+if [ -z "$TEST_DURATION" ] ; then
+    echo "ERROR: the 'TEST_DURATION' variable was not specified"
+    exit 1
+fi
 if [ -z "$CURR_RESULT_DIR" ] ; then
     echo "ERROR: the 'CURR_RESULT_DIR' variable was not specified"
-    exit 1
-fi
-if [ -z "$LOOP_COUNT" ] ; then
-    echo "ERROR: the 'LOOP_COUNT' variable was not specified"
-    exit 1
-fi
-if [ -z "$THREAD_COUNT" ] ; then
-    echo "ERROR: the 'THREAD_COUNT' variable was not specified"
     exit 1
 fi
 
@@ -39,9 +35,6 @@ do
     errorCountTotal=$(( ${errorCountTotal} + ${errorCount} ))
     successCountTotal=$(( ${successCountTotal} + ${successCount} ))
     timeSumTotal=`echo "${timeSumTotal} + ${timeSum}" | bc -l`
-    timeMin=`grep -v ERROR ${currFile} | sort -g | head -n1`
-    timeMax=`grep -v ERROR ${currFile} | sort -g | tail -n1`
-    timeAvg=`echo "scale=3; ${timeSum} / ${successCount}" | bc -l`
     if (( $(echo "${timeMin} < ${timeMinTotal}" | bc -l ) ))
     then
         timeMinTotal=$timeMin
@@ -51,7 +44,7 @@ do
         timeMaxTotal=$timeMax
     fi
 done
-reqPerSec=`echo "scale=3; ${reqCountTotal} / ${timeSumTotal}" | bc -l`
+reqPerSec=`echo "scale=3; ${reqCountTotal} / ${TEST_DURATION}" | bc -l`
 errorPercentage=`echo "scale=3; ${errorCountTotal} / ${reqCountTotal} * 100" | bc -l`
 timeAvg=`echo "scale=3; ${timeSumTotal} / ${successCountTotal}" | bc -l`
 echo -e "summary = ${reqCountTotal}\tin ${timeSumTotal}s\t= ${reqPerSec}/s\tAvg: ${timeAvg}\tMin: ${timeMinTotal}\tMax: ${timeMaxTotal}\tErr: ${errorCountTotal} (${errorPercentage}%)"

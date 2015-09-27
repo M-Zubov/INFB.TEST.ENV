@@ -25,6 +25,7 @@ then
 fi
 mkdir -p "$CURR_RESULT_DIR"
 
+timeStart=`date +%s`
 for i in `seq 1 $THREAD_COUNT`
 do
     THREAD_NUM=$i \
@@ -36,10 +37,13 @@ do
     ${SCRIPT_DIR}/_run-single-download-test-thread.sh &
 done
 wait
+timeEnd=`date +%s`
+timeDuration=$(( ${timeEnd} - ${timeStart} ))
 
 CURR_RESULT_DIR=$CURR_RESULT_DIR \
 THREAD_COUNT=$THREAD_COUNT \
 LOOP_COUNT=$LOOP_COUNT \
+TEST_DURATION=$timeDuration \
 ${SCRIPT_DIR}/_get-statistics-node.sh
 
 # end of file

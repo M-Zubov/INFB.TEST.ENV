@@ -3,6 +3,10 @@
 # parse logs from _run-single-download-test*.sh runs
 # and print statistics in the apache jmeter format
 
+if [ -z "$TEST_DURATION" ] ; then
+    echo "ERROR: the 'TEST_DURATION' variable was not specified"
+    exit 1
+fi
 if [ -z "$CURR_RESULT_DIR" ] ; then
     echo "ERROR: the 'CURR_RESULT_DIR' variable was not specified"
     exit 1
@@ -55,7 +59,7 @@ do
     echo -e "summary + ${LOOP_COUNT}\tin ${timeSum}s\t= ${reqPerSec}/s\tAvg: ${timeAvg}\tMin: ${timeMin}\tMax: ${timeMax}\tErr: ${errorCount} (${errorPercentage}%)"
 done
 reqCount=$(( ${LOOP_COUNT} * ${THREAD_COUNT} ))
-reqPerSec=`echo "scale=3; ${reqCount} / ${timeSumTotal}" | bc -l`
+reqPerSec=`echo "scale=3; ${reqCount} / ${TEST_DURATION}" | bc -l`
 errorPercentage=`echo "scale=3; ${errorCountTotal} / ${reqCount} * 100" | bc -l`
 timeAvg=`echo "scale=3; ${timeSumTotal} / ${successCountTotal}" | bc -l`
 echo -e "summary = ${reqCount}\tin ${timeSumTotal}s\t= ${reqPerSec}/s\tAvg: ${timeAvg}\tMin: ${timeMinTotal}\tMax: ${timeMaxTotal}\tErr: ${errorCountTotal} (${errorPercentage}%)"
