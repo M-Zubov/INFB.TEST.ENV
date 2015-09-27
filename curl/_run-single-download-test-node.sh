@@ -25,6 +25,7 @@ then
 fi
 mkdir -p "$CURR_RESULT_DIR"
 
+echo "Starting test on the `hostname` node: `date`"
 timeStart=`date +%s`
 for i in `seq 1 $THREAD_COUNT`
 do
@@ -39,6 +40,8 @@ done
 wait
 timeEnd=`date +%s`
 timeDuration=$(( ${timeEnd} - ${timeStart} ))
+echo "Test finished: `date`"
+echo "Test duration: date -u -d @${timeDuration} +"%T""
 
 CURR_RESULT_DIR=$CURR_RESULT_DIR \
 THREAD_COUNT=$THREAD_COUNT \

@@ -35,6 +35,7 @@ then
 fi
 mkdir -p "$CURR_RESULT_DIR"
 
+echo "Test started: `date`"
 timeTestStart=`date +%s`
 for i in $REMOTE_NODES
 do
@@ -51,6 +52,8 @@ done
 wait
 timeTestEnd=`date +%s`
 timeTestDuration=$(( ${timeTestEnd} - ${timeTestStart} ))
+echo "Test finished: `date`"
+echo "Test duration: `date -u -d @${timeTestDuration} +"%T"`"
 
 CURR_RESULT_DIR=$CURR_RESULT_DIR \
 TEST_DURATION=$timeTestDuration \

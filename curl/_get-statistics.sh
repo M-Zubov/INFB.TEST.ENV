@@ -47,6 +47,6 @@ done
 reqPerSec=`echo "scale=3; ${reqCountTotal} / ${TEST_DURATION}" | bc -l`
 errorPercentage=`echo "scale=3; ${errorCountTotal} / ${reqCountTotal} * 100" | bc -l`
 timeAvg=`echo "scale=3; ${timeSumTotal} / ${successCountTotal}" | bc -l`
-echo -e "summary = ${reqCountTotal}\tin ${timeSumTotal}s\t= ${reqPerSec}/s\tAvg: ${timeAvg}\tMin: ${timeMinTotal}\tMax: ${timeMaxTotal}\tErr: ${errorCountTotal} (${errorPercentage}%)"
+echo -e "summary = ${reqCountTotal}\tin ${TEST_DURATION}s\t= ${reqPerSec}/s\tAvg: ${timeAvg}\tMin: ${timeMinTotal}\tMax: ${timeMaxTotal}\tErr: ${errorCountTotal} (${errorPercentage}%)"
 
 # end of file
