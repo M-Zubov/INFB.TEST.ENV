@@ -26,8 +26,8 @@ if [ -z "$CURR_RESULT_DIR" ] ; then
     echo "ERROR: the 'CURR_RESULT_DIR' variable was not specified"
     exit 1
 fi
-if [ -z "$MD5SUM" ] ; then
-    echo "ERROR: the 'MD5SUM' variable was not specified"
+if [ -z "$REF_FILE_PATH" ] ; then
+    echo "ERROR: the 'REF_FILE_PATH' variable was not specified"
     exit 1
 fi
 
@@ -41,12 +41,12 @@ rm -f $LOCAL_FILE_NAME
 for i in `seq 1 $LOOP_COUNT`
 do
     timeVal=`curl http://10.16.0.2:${SERVER_PORT}${SERVER_PATH} -o $LOCAL_FILE_NAME -w "%{time_total}\n" -s`
-    md5sumVal=`md5sum $LOCAL_FILE_NAME | cut -d" " -f1`
-    if [ "$MD5SUM" != "$md5sumVal" ]
+	fileDiff=`diff -q $REF_FILE_PATH $LOCAL_FILE_NAME`
+    if [ -z "$fileDiff" ]
     then
-        echo "ERROR" >> ${LOG_FILE_NAME}
-    else
         echo "$timeVal" >> ${LOG_FILE_NAME}
+    else
+        echo "ERROR" >> ${LOG_FILE_NAME}
     fi
     rm $LOCAL_FILE_NAME
 done

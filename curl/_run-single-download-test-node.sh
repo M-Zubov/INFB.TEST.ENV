@@ -14,19 +14,9 @@ if [ -z "$LOG_NAME" ] ; then LOG_NAME="test-999" ; fi
 if [ -z "$RESULT_DIR" ] ; then RESULT_DIR="./results" ; fi
 if [ -z "$LOG_NAME" ] ; then LOG_NAME="test-999" ; fi
 if [ -z "$REF_FILE_PATH" ] ; then REF_FILE_PATH="${SCRIPT_DIR}/../data/000000.dcm" ; fi
-if [ -z "$RUN_REMOTE" ] ; then RUN_REMOTE=false ; fi
-
-if [ $RUN_REMOTE ]
-then
-    REMOTE_NODES="jmeter-node-1 jmeter-node-2 jmeter-node-3"
-	TOTAL_THREAD_COUNT=$(( 3 * ${THREAD_COUNT} ))
-else
-    REMOTE_NODES=localhost
-	TOTAL_THREAD_COUNT=$THREAD_COUNT
-fi
 
 CURR_RESULT_DIR=${RESULT_DIR}/${LOG_NAME}
-CURR_RESULT_DIR+=-t${TOTAL_THREAD_COUNT}
+CURR_RESULT_DIR+=-t${THREAD_COUNT}
 CURR_RESULT_DIR+=-l${LOOP_COUNT}
 
 if [ -e "$CURR_RESULT_DIR" ]
@@ -35,23 +25,21 @@ then
 fi
 mkdir -p "$CURR_RESULT_DIR"
 
-for i in $REMOTE_NODES
+for i in `seq 1 $THREAD_COUNT`
 do
-    NODE_LOG_FILE=${CURR_RESULT_DIR}/${i}-node.log
-    ssh $i \
     THREAD_NUM=$i \
     LOOP_COUNT=$LOOP_COUNT \
     SERVER_PORT=$SERVER_PORT \
     SERVER_PATH=$SERVER_PATH \
     CURR_RESULT_DIR=$CURR_RESULT_DIR \
     REF_FILE_PATH=$REF_FILE_PATH \
-    ${SCRIPT_DIR}/_run-single-download-test-node.sh > ${NODE_LOG_FILE} &
+    ${SCRIPT_DIR}/_run-single-download-test-thread.sh &
 done
 wait
 
 CURR_RESULT_DIR=$CURR_RESULT_DIR \
 THREAD_COUNT=$THREAD_COUNT \
 LOOP_COUNT=$LOOP_COUNT \
-${SCRIPT_DIR}/_get-statistics.sh
+${SCRIPT_DIR}/_get-statistics-node.sh
 
 # end of file

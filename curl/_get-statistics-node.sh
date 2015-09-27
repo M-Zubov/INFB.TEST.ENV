@@ -21,20 +21,21 @@ errorCountTotal=0
 timeSumTotal=0
 timeMinTotal=999999
 timeMaxTotal=0
-reqCountTotal=0
-for currFile in `ls ${CURR_RESULT_DIR}/*-node.log`
+for currFile in `ls ${CURR_RESULT_DIR}/*`
 do
-    dataLine=`grep "summary = " $currFile`
-	echo ${dataLine/summary =/summary +}
-
-	numReqs=`echo "$dataLine" | cut -f1 | cut -d" " -f3`
-	timeSum=`echo "$dataLine" | cut -f2 | cut -d" " -f2`
-	timeMin=`echo "$dataLine" | cut -f5 | cut -d" " -f2`
-	timeMax=`echo "$dataLine" | cut -f6 | cut -d" " -f2`
-	errorCount=`echo "$dataLine" | cut -f6 | cut -d" " -f2`
-	successCount=$(( ${numReqs} - ${errorCount} ))
-	reqCountTotal=$(( ${reqCountTotal} + ${numReqs} ))
-
+    errorCount=0
+    successCount=0
+    timeSum=0
+    for line in `cat $currFile`
+    do
+        if [ -z `echo "$line" | grep -i ERROR` ]
+        then
+            successCount=$(( ${successCount} + 1 ))
+            timeSum=`echo "${timeSum} + ${line}" | bc -l`
+        else
+            errorCount=$(( ${errorCount} + 1 ))
+        fi
+    done
     errorCountTotal=$(( ${errorCountTotal} + ${errorCount} ))
     successCountTotal=$(( ${successCountTotal} + ${successCount} ))
     timeSumTotal=`echo "${timeSumTotal} + ${timeSum}" | bc -l`
@@ -49,10 +50,14 @@ do
     then
         timeMaxTotal=$timeMax
     fi
+    errorPercentage=`echo "scale=3; ${errorCount} / ${LOOP_COUNT} * 100" | bc -l`
+    reqPerSec=`echo "scale=3; ${LOOP_COUNT} / ${timeSum}" | bc -l`
+    echo -e "summary + ${LOOP_COUNT}\tin ${timeSum}s\t= ${reqPerSec}/s\tAvg: ${timeAvg}\tMin: ${timeMin}\tMax: ${timeMax}\tErr: ${errorCount} (${errorPercentage}%)"
 done
-reqPerSec=`echo "scale=3; ${reqCountTotal} / ${timeSumTotal}" | bc -l`
-errorPercentage=`echo "scale=3; ${errorCountTotal} / ${reqCountTotal} * 100" | bc -l`
+reqCount=$(( ${LOOP_COUNT} * ${THREAD_COUNT} ))
+reqPerSec=`echo "scale=3; ${reqCount} / ${timeSumTotal}" | bc -l`
+errorPercentage=`echo "scale=3; ${errorCountTotal} / ${reqCount} * 100" | bc -l`
 timeAvg=`echo "scale=3; ${timeSumTotal} / ${successCountTotal}" | bc -l`
-echo -e "summary = ${reqCountTotal}\tin ${timeSumTotal}s\t= ${reqPerSec}/s\tAvg: ${timeAvg}\tMin: ${timeMinTotal}\tMax: ${timeMaxTotal}\tErr: ${errorCountTotal} (${errorPercentage}%)"
+echo -e "summary = ${reqCount}\tin ${timeSumTotal}s\t= ${reqPerSec}/s\tAvg: ${timeAvg}\tMin: ${timeMinTotal}\tMax: ${timeMaxTotal}\tErr: ${errorCountTotal} (${errorPercentage}%)"
 
 # end of file
