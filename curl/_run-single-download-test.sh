@@ -39,7 +39,7 @@ for i in $REMOTE_NODES
 do
     NODE_LOG_FILE=${CURR_RESULT_DIR}/${i}-node.log
     ssh $i \
-    THREAD_NUM=$i \
+    THREAD_COUNT=$THREAD_COUNT \
     LOOP_COUNT=$LOOP_COUNT \
     SERVER_PORT=$SERVER_PORT \
     SERVER_PATH=$SERVER_PATH \

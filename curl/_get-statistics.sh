@@ -29,9 +29,10 @@ do
 
 	numReqs=`echo "$dataLine" | cut -f1 | cut -d" " -f3`
 	timeSum=`echo "$dataLine" | cut -f2 | cut -d" " -f2`
+	timeSum=${timeSum/s/}
 	timeMin=`echo "$dataLine" | cut -f5 | cut -d" " -f2`
 	timeMax=`echo "$dataLine" | cut -f6 | cut -d" " -f2`
-	errorCount=`echo "$dataLine" | cut -f6 | cut -d" " -f2`
+	errorCount=`echo "$dataLine" | cut -f7 | cut -d" " -f2`
 	successCount=$(( ${numReqs} - ${errorCount} ))
 	reqCountTotal=$(( ${reqCountTotal} + ${numReqs} ))
 
