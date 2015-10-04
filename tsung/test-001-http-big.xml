@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE tsung SYSTEM "/usr/share/tsung/tsung-1.0.dtd">
 <tsung loglevel="warning">
 <!-- loglevel can have a great impact on performance: For high load, warning is recommended.
      Other levels (in order): emergency, critical, error, warning, notice (default), info, debug
@@ -15,28 +16,28 @@
 
 
 	<clients>
-		<client host="jmeter-node-1", weight="1", maxusers="1000">
+		<client host="jmeter-node-1" weight="1" maxusers="1000">
 			<ip value="10.16.0.21"></ip>
 		</client>
-		<client host="jmeter-node-2", weight="1", maxusers="1000">
+		<client host="jmeter-node-2" weight="1" maxusers="1000">
 			<ip value="10.16.0.22"></ip>
 		</client>
-		<client host="jmeter-node-3", weight="1", maxusers="1000">
+		<client host="jmeter-node-3" weight="1" maxusers="1000">
 			<ip value="10.16.0.23"></ip>
 		</client>
 	</clients>
-
-	<monitoring>
-		<monitor host="mt-server-node" type="erlang"></monitor>
-	</monitoring>
 
 	<servers>
 		<server host="mt-server-node" port="80" type="tcp" weight="1"></server>
 	</servers>
 
+	<monitoring>
+		<monitor host="mt-server-node" type="erlang"></monitor>
+	</monitoring>
+
 	<load>
-		<arrivalphase phase="1" duration="1" unit="second">
-			<users arrivalrate="1000" unit="second">
+		<arrivalphase phase="1" duration="20" unit="second">
+			<users arrivalrate="50" unit="second"></users>
 		</arrivalphase>
 	</load>
 
